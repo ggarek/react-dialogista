@@ -7,8 +7,7 @@ function initialState() {
   };
 }
 
-function handleShowDialog(state, payload) {
-  const { component, props } = payload;
+function handleShowDialog(state, { component, props }) {
   const dialogOnTop = {
     component,
     props,
@@ -17,6 +16,14 @@ function handleShowDialog(state, payload) {
   return {
     dialogOnTop,
     pendingDialogs: [dialogOnTop, ...state.pendingDialogs],
+  };
+}
+
+function handleShowManyDialogs(state, { dialogs }) {
+  const newDialogs = [...dialogs].reverse();
+  return {
+    dialogOnTop: newDialogs[0],
+    pendingDialogs: newDialogs.concat(state.pendingDialogs),
   };
 }
 
@@ -38,6 +45,9 @@ function showDialog(state = initialState(), { type, ...payload }) {
   switch (type) {
   case 'SHOW_DIALOG':
     return handleShowDialog(state, payload);
+
+  case 'SHOW_MANY_DIALOGS':
+    return handleShowManyDialogs(state, payload);
 
   case 'DISMISS_DIALOG':
   case 'CONFIRM_DIALOG':
