@@ -1,0 +1,5 @@
+# Ignore all, then exclude necessary stuff. (It is whitelist approach)
+**/*
+
+# Exclude necessary stuff
+!lib
