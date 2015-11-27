@@ -2,4 +2,4 @@
 **/*
 
 # Exclude necessary stuff
-!lib
+!lib/**
