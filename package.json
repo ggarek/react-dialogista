@@ -4,9 +4,14 @@
   "description": "Slim library for all your dialogs",
   "main": "lib/index.js",
   "scripts": {
+    "clean": "rm -rf lib",
     "lint": "eslint src/ *.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:lib": "babel src --out-dir lib"
+    "build:lib": "babel src --out-dir lib",
+    "preversion": "npm run clean",
+    "version": "npm run build:lib",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run clean && npm run build:lib"
   },
   "keywords": [
     "react",
