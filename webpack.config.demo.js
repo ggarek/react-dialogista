@@ -24,6 +24,11 @@ module.exports = {
         loader: 'babel',
         include: ['src/demo', 'src/lib'].map(d => path.join(__dirname, d)),
       },
+      {
+        test: /\.scss$/,
+        loader: 'style!css!postcss!sass',
+        include: path.join(__dirname, 'src/lib/styles/'),
+      },
     ],
   },
 };

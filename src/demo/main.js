@@ -1,3 +1,4 @@
+require('../lib/styles/dialogista.scss');
 import ReactDOM from 'react-dom';
 import React from 'react';
 import App from './components/App';
