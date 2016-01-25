@@ -43,9 +43,12 @@
     "eslint": "^1.10.1",
     "eslint-config-airbnb": "^1.0.0",
     "eslint-plugin-react": "^3.10.0",
+    "express": "^4.13.4",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
-    "webpack": "^1.12.12"
+    "webpack": "^1.12.12",
+    "webpack-dev-middleware": "^1.5.1",
+    "webpack-hot-middleware": "^2.6.2"
   },
   "peerDependencies": {
     "react": "^0.14.0"
