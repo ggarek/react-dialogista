@@ -4,14 +4,13 @@
   "description": "Slim library for all your dialogs",
   "main": "lib/scripts/index.js",
   "scripts": {
-    "clean": "rm -rf lib",
     "lint": "eslint src/ *.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:lib": "npm run clear:lib && babel src/lib --out-dir lib && mkdir lib/styles && cp -r src/lib/styles lib",
     "build:demo": "npm run clear:demo && webpack --config webpack.config.demo && cp src/demo/index.html demo/index.html",
     "clear:demo": "rm -rf demo/**",
     "clear:lib": "rm -rf lib/**",
-    "preversion": "npm run clean",
+    "preversion": "npm run clear:lib && npm run lint",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run clean && npm run build:lib"
