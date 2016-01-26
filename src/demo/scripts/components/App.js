@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { showDialog } from '../../lib';
+import { showDialog } from '../../../lib/scripts';
 import SimpleDialog from './SimpleDialog';
 
 export default class App extends Component {
