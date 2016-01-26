@@ -13,7 +13,7 @@
     "preversion": "npm run clear:lib && npm run lint",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags",
-    "prepublish": "npm run clean && npm run build:lib"
+    "prepublish": "npm run clear:lib && npm run build:lib"
   },
   "keywords": [
     "react",
