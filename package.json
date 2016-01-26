@@ -2,7 +2,7 @@
   "name": "react-dialogista",
   "version": "0.3.0",
   "description": "Slim library for all your dialogs",
-  "main": "lib/index.js",
+  "main": "lib/scripts/index.js",
   "scripts": {
     "clean": "rm -rf lib",
     "lint": "eslint src/ *.js",
