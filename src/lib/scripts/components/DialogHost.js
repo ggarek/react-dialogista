@@ -24,7 +24,7 @@ function confirmDialog() {
 class DialogHost extends React.Component {
   static propTypes = {
     store: PropTypes.object.isRequired,
-    dialogOnTop: PropTypes.object.isRequired,
+    dialogOnTop: PropTypes.object,
     pendingDialogs: PropTypes.arrayOf(PropTypes.object).isRequired,
     overlayClassName: PropTypes.string,
     summaryClassName: PropTypes.string,
