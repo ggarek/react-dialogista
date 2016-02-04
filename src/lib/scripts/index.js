@@ -2,36 +2,40 @@ import createDialogStore from './dialogStore';
 import Dialog from './components/Dialog';
 import DialogHost from './components/DialogHost';
 
-const dialogStore = createDialogStore({ mode: 'stack' });
+function createDialogActions(dialogStore) {
+  /**
+   * Show one dialog
+   * @param {React.Component} component
+   * @param {object} props
+   */
+  function showDialog(component, props) {
+    dialogStore.dispatch({
+      type: 'SHOW_DIALOG',
+      component,
+      props,
+    });
+  }
 
-/**
- * Show one dialog
- * @param {React.Component} component
- * @param {object} props
- */
-function showDialog(component, props) {
-  dialogStore.dispatch({
-    type: 'SHOW_DIALOG',
-    component,
-    props,
-  });
-}
+  /**
+   * Show any number of dialogs at once
+   * @param {array} dialogs
+   */
+  function showManyDialogs(dialogs) {
+    dialogStore.dispatch({
+      type: 'SHOW_MANY_DIALOGS',
+      dialogs: dialogs.map(([component, props]) => ({ component, props })),
+    });
+  }
 
-/**
- * Show any number of dialogs at once
- * @param {array} dialogs
- */
-function showManyDialogs(dialogs) {
-  dialogStore.dispatch({
-    type: 'SHOW_MANY_DIALOGS',
-    dialogs: dialogs.map(([component, props]) => ({ component, props })),
-  });
+  return {
+    showDialog,
+    showManyDialogs,
+  };
 }
 
 export {
   Dialog,
   DialogHost,
-  dialogStore,
-  showDialog,
-  showManyDialogs,
+  createDialogStore,
+  createDialogActions,
 };
