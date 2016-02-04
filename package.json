@@ -10,10 +10,10 @@
     "build:demo": "npm run clear:demo && webpack --config webpack.config.demo && cp src/demo/index.html demo/index.html",
     "clear:demo": "rm -rf demo/**",
     "clear:lib": "rm -rf lib/**",
-    "preversion": "npm run clear:lib && npm run lint",
+    "preversion": "npm run clear:lib && npm run lint && npm test",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags",
-    "prepublish": "npm run clear:lib && npm run build:lib"
+    "prepublish": "npm run clear:lib && npm test && npm run build:lib"
   },
   "keywords": [
     "react",
