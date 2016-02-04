@@ -11,6 +11,14 @@ const {
   handleShowManyDialogsQueue,
 } = all;
 
+function getThreeDialogs() {
+  const dialog1 = { component: 'a', props: 1 };
+  const dialog2 = { component: 'b', props: 2 };
+  const dialog3 = { component: 'c', props: 3 };
+
+  return [dialog1, dialog2, dialog3];
+}
+
 tape('dialogStore', test => {
   test.test('action: showDialog (stack mode)', assert => {
     const state = initialState();
@@ -83,6 +91,22 @@ tape('dialogStore', test => {
     assert.end();
   });
 
+  test.test('dismiss or confirm dialog', assert => {
+    const store = createDialogStore({ mode: 'stack' });
+
+    store.dispatch({ type: 'SHOW_MANY_DIALOGS', dialogs: getThreeDialogs() });
+    store.dispatch({ type: 'DISMISS_DIALOG' });
+    const [dialog1, dialog2] = getThreeDialogs();
+    assert.deepEqual(store.getState().dialogOnTop, dialog2, 'second dialog should be on top');
+    assert.deepEqual(store.getState().pendingDialogs, [dialog2, dialog1], 'last to dialogs should be pending');
+
+    store.dispatch({ type: 'CONFIRM_DIALOG' });
+    assert.deepEqual(store.getState().dialogOnTop, dialog1, 'first dialog should be on top');
+    assert.deepEqual(store.getState().pendingDialogs, [dialog1], 'one dialog should be left pending');
+
+    assert.end();
+  });
+
   test.test('store reducer (stack mode)', assert => {
     const store = createDialogStore({ mode: 'stack' });
     let spy = sinon.spy(all, 'handleShowDialogStack');
@@ -95,6 +119,13 @@ tape('dialogStore', test => {
     store.dispatch({ type: 'SHOW_MANY_DIALOGS', dialogs: [] });
     assert.ok(spy.calledOnce, 'should call show many dialogs handler');
     all.handleShowManyDialogsStack.restore();
+
+    spy = sinon.spy(all, 'handleCloseDialog');
+    store.dispatch({ type: 'DISMISS_DIALOG' });
+    assert.ok(spy.calledOnce, 'should call close dialog handler');
+    store.dispatch({ type: 'CONFIRM_DIALOG' });
+    assert.ok(spy.calledTwice, 'should call close dialog handler');
+    all.handleCloseDialog.restore();
 
     assert.end();
   });
@@ -111,6 +142,13 @@ tape('dialogStore', test => {
     store.dispatch({ type: 'SHOW_MANY_DIALOGS', dialogs: [] });
     assert.ok(spy.calledOnce, 'should call show many dialogs handler');
     all.handleShowManyDialogsQueue.restore();
+
+    spy = sinon.spy(all, 'handleCloseDialog');
+    store.dispatch({ type: 'DISMISS_DIALOG' });
+    assert.ok(spy.calledOnce, 'should call close dialog handler');
+    store.dispatch({ type: 'CONFIRM_DIALOG' });
+    assert.ok(spy.calledTwice, 'should call close dialog handler');
+    all.handleCloseDialog.restore();
 
     assert.end();
   });

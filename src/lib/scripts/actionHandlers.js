@@ -26,6 +26,7 @@ export function handleShowDialogStack(state, { component, props }) {
   };
 
   return {
+    ...state,
     dialogOnTop,
     pendingDialogs: [dialogOnTop, ...state.pendingDialogs],
   };
@@ -34,6 +35,7 @@ export function handleShowDialogStack(state, { component, props }) {
 export function handleShowManyDialogsStack(state, { dialogs }) {
   const newDialogs = [...dialogs].reverse();
   return {
+    ...state,
     dialogOnTop: newDialogs[0],
     pendingDialogs: newDialogs.concat(state.pendingDialogs),
   };
@@ -58,6 +60,7 @@ export function handleCloseDialog(state) {
   const nextPendingDialogs = pendingDialogs.slice(1);
 
   return {
+    ...state,
     dialogOnTop: nextPendingDialogs[0] || null,
     pendingDialogs: nextPendingDialogs,
   };
