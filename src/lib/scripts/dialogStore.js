@@ -1,60 +1,33 @@
 import { createStore } from 'redux';
+import {
+  initialState,
+  handleCloseDialog,
+  handleShowDialogQueue,
+  handleShowDialogStack,
+  handleShowManyDialogsStack,
+  handleShowManyDialogsQueue,
+} from './actionHandlers';
 
-function initialState() {
-  return {
-    dialogOnTop: null,
-    pendingDialogs: [],
-  };
-}
+function createDialogStore(options) {
+  const isStackMode = options.mode === 'stack';
 
-function handleShowDialog(state, { component, props }) {
-  const dialogOnTop = {
-    component,
-    props,
-  };
+  function showDialog(state = initialState(), { type, ...payload }) {
+    switch (type) {
+    case 'SHOW_DIALOG':
+      return isStackMode ? handleShowDialogStack(state, payload) : handleShowDialogQueue(state, payload);
 
-  return {
-    dialogOnTop,
-    pendingDialogs: [dialogOnTop, ...state.pendingDialogs],
-  };
-}
+    case 'SHOW_MANY_DIALOGS':
+      return isStackMode ? handleShowManyDialogsStack(state, payload) : handleShowManyDialogsQueue(state, payload);
 
-function handleShowManyDialogs(state, { dialogs }) {
-  const newDialogs = [...dialogs].reverse();
-  return {
-    dialogOnTop: newDialogs[0],
-    pendingDialogs: newDialogs.concat(state.pendingDialogs),
-  };
-}
+    case 'DISMISS_DIALOG':
+    case 'CONFIRM_DIALOG':
+      return handleCloseDialog(state);
 
-function handleCloseDialog(state) {
-  const { dialogOnTop, pendingDialogs } = state;
-  if (!dialogOnTop) {
-    return state;
+    default: return state;
+    }
   }
 
-  const nextPendingDialogs = pendingDialogs.slice(1);
-
-  return {
-    dialogOnTop: nextPendingDialogs[0] || null,
-    pendingDialogs: nextPendingDialogs,
-  };
+  return createStore(showDialog);
 }
 
-function showDialog(state = initialState(), { type, ...payload }) {
-  switch (type) {
-  case 'SHOW_DIALOG':
-    return handleShowDialog(state, payload);
-
-  case 'SHOW_MANY_DIALOGS':
-    return handleShowManyDialogs(state, payload);
-
-  case 'DISMISS_DIALOG':
-  case 'CONFIRM_DIALOG':
-    return handleCloseDialog(state);
-
-  default: return state;
-  }
-}
-
-export default createStore(showDialog);
+export default createDialogStore;

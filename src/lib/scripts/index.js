@@ -1,6 +1,8 @@
-import dialogStore from './dialogStore';
+import createDialogStore from './dialogStore';
 import Dialog from './components/Dialog';
 import DialogHost from './components/DialogHost';
+
+const dialogStore = createDialogStore({ mode: 'stack' });
 
 /**
  * Show one dialog
