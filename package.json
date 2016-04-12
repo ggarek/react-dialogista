@@ -1,6 +1,6 @@
 {
   "name": "react-dialogista",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Slim library for all your dialogs",
   "main": "lib/scripts/index.js",
   "scripts": {
