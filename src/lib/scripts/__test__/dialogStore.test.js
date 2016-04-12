@@ -1,7 +1,8 @@
 import tape from 'tape';
 import sinon from 'sinon';
 import * as all from '../actionHandlers';
-import createDialogStore from '../dialogStore';
+import createDialogistaReducer from '../reducer';
+import { createStore } from 'redux';
 
 const {
   initialState,
@@ -92,7 +93,7 @@ tape('dialogStore', test => {
   });
 
   test.test('dismiss or confirm dialog', assert => {
-    const store = createDialogStore({ mode: 'stack' });
+    const store = createStore(createDialogistaReducer({ mode: 'stack' }));
 
     store.dispatch({ type: 'SHOW_MANY_DIALOGS', dialogs: getThreeDialogs() });
     store.dispatch({ type: 'DISMISS_DIALOG' });
@@ -108,7 +109,7 @@ tape('dialogStore', test => {
   });
 
   test.test('store reducer (stack mode)', assert => {
-    const store = createDialogStore({ mode: 'stack' });
+    const store = createStore(createDialogistaReducer({ mode: 'stack' }));
     let spy = sinon.spy(all, 'handleShowDialogStack');
 
     store.dispatch({ type: 'SHOW_DIALOG' });
@@ -131,7 +132,7 @@ tape('dialogStore', test => {
   });
 
   test.test('store reducer (queue mode)', assert => {
-    const store = createDialogStore({ mode: 'queue' });
+    const store = createStore(createDialogistaReducer({ mode: 'queue' }));
     let spy = sinon.spy(all, 'handleShowDialogQueue');
 
     store.dispatch({ type: 'SHOW_DIALOG' });

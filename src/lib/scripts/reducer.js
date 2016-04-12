@@ -1,4 +1,3 @@
-import { createStore } from 'redux';
 import {
   initialState,
   handleCloseDialog,
@@ -8,10 +7,14 @@ import {
   handleShowManyDialogsQueue,
 } from './actionHandlers';
 
-function createDialogStore(options) {
+const DEFAULT_OPTIONS = {
+  mode: 'stack',
+};
+
+function createDialogistaReducer(options = DEFAULT_OPTIONS) {
   const isStackMode = options.mode === 'stack';
 
-  function showDialog(state = initialState(), { type, ...payload }) {
+  function dialogistaReducer(state = initialState(), { type, ...payload }) {
     switch (type) {
     case 'SHOW_DIALOG':
       return isStackMode ? handleShowDialogStack(state, payload) : handleShowDialogQueue(state, payload);
@@ -23,11 +26,12 @@ function createDialogStore(options) {
     case 'CONFIRM_DIALOG':
       return handleCloseDialog(state);
 
-    default: return state;
+    default:
+      return state;
     }
   }
 
-  return createStore(showDialog);
+  return dialogistaReducer;
 }
 
-export default createDialogStore;
+export default createDialogistaReducer;

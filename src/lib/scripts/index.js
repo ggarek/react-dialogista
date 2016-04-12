@@ -1,4 +1,4 @@
-import createDialogStore from './dialogStore';
+import createDialogistaReducer from './reducer';
 import Dialog from './components/Dialog';
 import DialogHost from './components/DialogHost';
 
@@ -36,6 +36,6 @@ function createDialogActions(dialogStore) {
 export {
   Dialog,
   DialogHost,
-  createDialogStore,
+  createDialogistaReducer,
   createDialogActions,
 };
