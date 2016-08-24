@@ -2,9 +2,18 @@ import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import Overlay from './Overlay';
 import DialogsSummary from './DialogsSummary';
+import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
 import { connect } from 'react-redux';
 
 const ESC = 27;
+
+
+class FirstChild extends React.Component {
+  render() {
+    var children = React.Children.toArray(this.props.children);
+    return children[0] || null;
+  }
+}
 
 function dismissDialog() {
   return {
@@ -63,6 +72,7 @@ class DialogHost extends React.Component {
 
     if (dialogOnTop) {
       const {
+        key,
         component,
         props,
       } = dialogOnTop;
@@ -72,7 +82,7 @@ class DialogHost extends React.Component {
         confirm() { store.dispatch(confirmDialog()); },
       };
 
-      const dialogProps = { ...props, dialog };
+      const dialogProps = { ...props, dialog, key };
       content = React.createElement(component, dialogProps);
     }
 
@@ -87,11 +97,19 @@ class DialogHost extends React.Component {
 
     const classes = cx('dialog-host', className);
     return (
-      <div className={classes}>
-        <Overlay className={overlayClassName}/>
-        <DialogsSummary {...summaryProps}/>
+      <ReactCSSTransitionGroup
+        component="div"
+        className={classes}
+        transitionName="example"
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={400}
+      >
+        {
+/*          <Overlay className={overlayClassName}/>
+          < DialogsSummary {...summaryProps}/>*/
+        }
         { content }
-      </div>
+      </ReactCSSTransitionGroup>
     );
   }
 }
@@ -99,5 +117,47 @@ class DialogHost extends React.Component {
 function mapStateToProps(state) {
   return state;
 }
+//
+const SelfTransitionHostHOC = ComposedComponent => class extends React.Component {
+  render() {
+    // const props = {
+    //   transitionName: 'self',
+    //   transitionEnterTimeout: 10500,
+    //   transitionLeaveTimeout: 10400,
+    // };
+    return (
+      <ReactCSSTransitionGroup
+        component={FirstChild}
+        transitionName="self"
+        transitionEnterTimeout={2500}
+        transitionLeaveTimeout={2400}
+      >
+        { this.props.dialogOnTop ? <ComposedComponent {...this.props} /> : null }
+      </ReactCSSTransitionGroup>
+    );
+  }
+};
 
-export default connect(mapStateToProps)(DialogHost);
+function wrapWith(wrapper, wrapperProps, composed, composedProps, shouldRenderComposed = () => true) {
+  return class extends React.Component {
+    render() {
+      const children = shouldRenderComposed(this.props)
+        ? React.createElement(composed, composedProps(this.props))
+        : null;
+
+      return React.createElement(wrapper, wrapperProps(this.props), children);
+    }
+  };
+}
+
+const wrapped = wrapWith(
+  ReactCSSTransitionGroup,
+  () => ({ component: FirstChild, transitionName: 'self', transitionEnterTimeout: 500, transitionLeaveTimeout: 400 }),
+  DialogHost,
+  x => x,
+  props => Boolean(props.dialogOnTop)
+);
+
+// export default connect(mapStateToProps)(DialogHost);
+// export default connect(mapStateToProps)(SelfTransitionHostHOC(DialogHost));
+export default connect(mapStateToProps)(wrapped);
