@@ -1,8 +1,3 @@
-const uid = (() => {
-  let i = 0;
-  return () => ++i;
-})();
-
 export function initialState() {
   return {
     dialogOnTop: null,
@@ -10,9 +5,9 @@ export function initialState() {
   };
 }
 
-export function handleShowDialogQueue(state, { component, props }) {
+export function handleShowDialogQueue(state, { id, component, props }) {
   const nextDialog = {
-    key: `dialogista-${uid()}`,
+    id,
     component,
     props,
   };
@@ -25,9 +20,9 @@ export function handleShowDialogQueue(state, { component, props }) {
   };
 }
 
-export function handleShowDialogStack(state, { component, props }) {
+export function handleShowDialogStack(state, { id, component, props }) {
   const dialogOnTop = {
-    key: `dialogista-${uid()}`,
+    id,
     component,
     props,
   };

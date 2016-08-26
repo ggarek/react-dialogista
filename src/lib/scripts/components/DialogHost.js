@@ -75,7 +75,7 @@ class DialogHost extends React.Component {
 
     if (dialogOnTop) {
       const {
-        key,
+        id,
         component,
         props,
       } = dialogOnTop;
@@ -85,7 +85,7 @@ class DialogHost extends React.Component {
         confirm() { store.dispatch(confirmDialog()); },
       };
 
-      const dialogProps = { ...props, dialog, key };
+      const dialogProps = { ...props, dialog, key: id };
       content = React.createElement(component, dialogProps);
     }
 
