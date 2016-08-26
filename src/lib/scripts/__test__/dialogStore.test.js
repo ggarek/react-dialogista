@@ -20,17 +20,28 @@ function getThreeDialogs() {
   return [dialog1, dialog2, dialog3];
 }
 
+const withoutKey = ({ key, ...rest }) => rest;
+
+const stateWithoutDialogKeys = state => {
+  const { dialogOnTop, pendingDialogs } = state;
+  return {
+    ...state,
+    dialogOnTop: withoutKey(dialogOnTop),
+    pendingDialogs: pendingDialogs.map(withoutKey),
+  };
+};
+
 tape('dialogStore', test => {
   test.test('action: showDialog (stack mode)', assert => {
     const state = initialState();
     const dialog1 = { component: 'a', props: 1 };
     const state1 = handleShowDialogStack(state, dialog1);
-    assert.deepEqual(state1.dialogOnTop, dialog1, 'should display given dialog');
+    assert.deepEqual(withoutKey(state1.dialogOnTop), dialog1, 'should display given dialog');
 
     const dialog2 = { component: 'b', props: 2 };
     const state2 = handleShowDialogStack(state1, dialog2);
     assert.equal(state2.pendingDialogs.length, 2, 'two dialogs should be pending');
-    assert.deepEqual(state2.dialogOnTop, dialog2, 'second dialog should be on top');
+    assert.deepEqual(withoutKey(state2.dialogOnTop), dialog2, 'second dialog should be on top');
 
     assert.end();
   });
@@ -39,13 +50,13 @@ tape('dialogStore', test => {
     const state = initialState();
     const dialog1 = { component: 'a', props: 1 };
     const state1 = handleShowDialogQueue(state, dialog1);
-    assert.deepEqual(state1.dialogOnTop, dialog1, 'should display given dialog');
+    assert.deepEqual(withoutKey(state1.dialogOnTop), dialog1, 'should display given dialog');
 
     const dialog2 = { component: 'b', props: 2 };
     const state2 = handleShowDialogQueue(state1, dialog2);
     assert.equal(state2.pendingDialogs.length, 2, 'two dialogs should be pending');
-    assert.deepEqual(state2.dialogOnTop, dialog1, 'first dialog should be still on top');
-    assert.deepEqual(state2.pendingDialogs[1], dialog2, 'second dialog should be pending');
+    assert.deepEqual(withoutKey(state2.dialogOnTop), dialog1, 'first dialog should be still on top');
+    assert.deepEqual(withoutKey(state2.pendingDialogs[1]), dialog2, 'second dialog should be pending');
 
     assert.end();
   });
@@ -60,13 +71,21 @@ tape('dialogStore', test => {
     }, initialState());
 
     const state2 = handleShowManyDialogsStack(initialState(), { dialogs: [dialog1, dialog2, dialog3] });
-    assert.deepEqual(state2, state1, 'n show dialog actions should produce the ame result as one show many dialog action');
+    assert.deepEqual(
+      stateWithoutDialogKeys(state2),
+      stateWithoutDialogKeys(state1),
+      'show dialog actions should produce the same result as one show many dialog action'
+    );
 
     const state3 = handleShowManyDialogsStack(
       handleShowDialogStack(initialState(), dialog1),
       { dialogs: [dialog2, dialog3]}
     );
-    assert.deepEqual(state3, state1, 'n show dialog actions should produce the ame result as one show many dialog action');
+    assert.deepEqual(
+      stateWithoutDialogKeys(state3),
+      stateWithoutDialogKeys(state1),
+      'show dialog actions should produce the same result as one show many dialog action'
+    );
 
     assert.end();
   });
@@ -81,13 +100,21 @@ tape('dialogStore', test => {
     }, initialState());
 
     const state2 = handleShowManyDialogsQueue(initialState(), { dialogs: [dialog1, dialog2, dialog3] });
-    assert.deepEqual(state2, state1, 'n show dialog actions should produce the ame result as one show many dialog action');
+    assert.deepEqual(
+      stateWithoutDialogKeys(state2),
+      stateWithoutDialogKeys(state1),
+      'show dialog actions should produce the same result as one show many dialog action'
+    );
 
     const state3 = handleShowManyDialogsQueue(
       handleShowDialogQueue(initialState(), dialog1),
       { dialogs: [dialog2, dialog3]}
     );
-    assert.deepEqual(state3, state1, 'n show dialog actions should produce the ame result as one show many dialog action');
+    assert.deepEqual(
+      stateWithoutDialogKeys(state3),
+      stateWithoutDialogKeys(state1),
+      'show dialog actions should produce the same result as one show many dialog action'
+    );
 
     assert.end();
   });
