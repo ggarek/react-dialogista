@@ -2,7 +2,10 @@ import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import Overlay from './Overlay';
 import DialogsSummary from './DialogsSummary';
+import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
+import FirstChild from './FirstChild';
 import { connect } from 'react-redux';
+import wrapWith from './wrapWith';
 
 const ESC = 27;
 
@@ -29,6 +32,7 @@ class DialogHost extends React.Component {
     overlayClassName: PropTypes.string,
     summaryClassName: PropTypes.string,
     className: PropTypes.string,
+    childrenTransitionProps: PropTypes.object,
   };
   static defaultProps = {
   };
@@ -59,10 +63,19 @@ class DialogHost extends React.Component {
 
   render() {
     let content = null;
-    const { dialogOnTop, pendingDialogs, store, overlayClassName, summaryClassName, className } = this.props;
+    const {
+      dialogOnTop,
+      pendingDialogs,
+      store,
+      overlayClassName,
+      summaryClassName,
+      className,
+      childrenTransitionProps,
+    } = this.props;
 
     if (dialogOnTop) {
       const {
+        key,
         component,
         props,
       } = dialogOnTop;
@@ -72,7 +85,7 @@ class DialogHost extends React.Component {
         confirm() { store.dispatch(confirmDialog()); },
       };
 
-      const dialogProps = { ...props, dialog };
+      const dialogProps = { ...props, dialog, key };
       content = React.createElement(component, dialogProps);
     }
 
@@ -86,6 +99,22 @@ class DialogHost extends React.Component {
     }
 
     const classes = cx('dialog-host', className);
+    const animated = Boolean(childrenTransitionProps);
+
+    if (animated) {
+      return (
+        <ReactCSSTransitionGroup
+          component="div"
+          className={classes}
+          {...childrenTransitionProps}
+        >
+          <Overlay className={overlayClassName}/>
+          <DialogsSummary {...summaryProps}/>
+          { content }
+        </ReactCSSTransitionGroup>
+      );
+    }
+
     return (
       <div className={classes}>
         <Overlay className={overlayClassName}/>
@@ -100,4 +129,13 @@ function mapStateToProps(state) {
   return state;
 }
 
-export default connect(mapStateToProps)(DialogHost);
+const wrapped = wrapWith(
+  ReactCSSTransitionGroup,
+  props => ({ ...props.selfTransitionProps, component: FirstChild }),
+  DialogHost,
+  ({ selfTransitionProps, ...rest }) => rest, // eslint-disable-line
+  props => Boolean(props.dialogOnTop),
+  props => Boolean(props.selfTransitionProps)
+);
+
+export default connect(mapStateToProps)(wrapped);
