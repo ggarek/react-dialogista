@@ -20,7 +20,7 @@ function getThreeDialogs() {
   return [dialog1, dialog2, dialog3];
 }
 
-const withoutKey = ({ key, ...rest }) => rest;
+const withoutKey = ({ key, ...rest }) => rest; // eslint-disable-line
 
 const stateWithoutDialogKeys = state => {
   const { dialogOnTop, pendingDialogs } = state;
