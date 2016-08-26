@@ -3,18 +3,11 @@ import cx from 'classnames';
 import Overlay from './Overlay';
 import DialogsSummary from './DialogsSummary';
 import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
+import FirstChild from './FirstChild';
 import { connect } from 'react-redux';
 import wrapWith from './wrapWith';
 
 const ESC = 27;
-
-
-class FirstChild extends React.Component {
-  render() {
-    var children = React.Children.toArray(this.props.children);
-    return children[0] || null;
-  }
-}
 
 function dismissDialog() {
   return {
@@ -138,7 +131,7 @@ function mapStateToProps(state) {
 
 const wrapped = wrapWith(
   ReactCSSTransitionGroup,
-  props => props.selfTransitionProps,
+  props => ({ ...props.selfTransitionProps, component: FirstChild }),
   DialogHost,
   ({ selfTransitionProps, ...rest }) => rest, // eslint-disable-line
   props => Boolean(props.dialogOnTop),
