@@ -9,15 +9,17 @@ import wrapWith from './wrapWith';
 
 const ESC = 27;
 
-function dismissDialog() {
+function dismissDialog(id) {
   return {
     type: 'DISMISS_DIALOG',
+    id,
   };
 }
 
-function confirmDialog() {
+function confirmDialog(id) {
   return {
     type: 'CONFIRM_DIALOG',
+    id,
   };
 }
 
@@ -27,13 +29,15 @@ function confirmDialog() {
 class DialogHost extends React.Component {
   static propTypes = {
     store: PropTypes.object.isRequired,
-    dialogOnTop: PropTypes.object,
-    pendingDialogs: PropTypes.arrayOf(PropTypes.object).isRequired,
     overlayClassName: PropTypes.string,
     summaryClassName: PropTypes.string,
     className: PropTypes.string,
     childrenTransitionProps: PropTypes.object,
+    mode: PropTypes.oneOf(['stack', 'queue']),
+    show: PropTypes.number,
+    items: PropTypes.array,
   };
+
   static defaultProps = {
   };
 
@@ -57,46 +61,48 @@ class DialogHost extends React.Component {
       ne.preventDefault();
       ne.stopPropagation();
 
-      store.dispatch(dismissDialog());
+      // TODO: since only host now knows the display mode, it should get proper dialog id'
+      console.warn('dialogista: TODO: since only host now knows the display mode, it should get proper dialog id');
+      // store.dispatch(dismissDialog());
     }
   }
 
   render() {
-    let content = null;
     const {
-      dialogOnTop,
-      pendingDialogs,
       store,
       overlayClassName,
       summaryClassName,
       className,
       childrenTransitionProps,
+      items,
+      mode,
+      show,
     } = this.props;
 
-    if (dialogOnTop) {
-      const {
-        id,
-        component,
-        props,
-      } = dialogOnTop;
+    if (items.length === 0) return null;
 
-      const dialog = {
-        dismiss() { store.dispatch(dismissDialog()); },
-        confirm() { store.dispatch(confirmDialog()); },
-      };
+    let content;
 
-      const dialogProps = { ...props, dialog, key: id };
-      content = React.createElement(component, dialogProps);
-    }
+
+    const specialProps = dlg => ({
+      dismiss() { store.dispatch(dismissDialog(dlg.id)); },
+      confirm() { store.dispatch(confirmDialog(dlg.id)); },
+    });
+
+    const toShow = mode === 'stack' ? items.slice(0, show) : items.slice(-1 * show);
+    content = toShow.map(dlg => React.createElement(
+      dlg.component,
+      {
+        ...dlg.props,
+        dialog: specialProps(dlg),
+        key: dlg.id,
+      })
+    );
 
     const summaryProps = {
-      pendingDialogsCount: pendingDialogs.length,
+      pendingDialogsCount: Math.max(0, items.length - show),
       className: summaryClassName,
     };
-
-    if (!dialogOnTop) {
-      return null;
-    }
 
     const classes = cx('dialog-host', className);
     const animated = Boolean(childrenTransitionProps);
@@ -134,7 +140,7 @@ const wrapped = wrapWith(
   props => ({ ...props.selfTransitionProps, component: FirstChild }),
   DialogHost,
   ({ selfTransitionProps, ...rest }) => rest, // eslint-disable-line
-  props => Boolean(props.dialogOnTop),
+  props => Boolean(props.items.length > 0),
   props => Boolean(props.selfTransitionProps)
 );
 
