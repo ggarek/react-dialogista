@@ -12,6 +12,7 @@ export default class SimpleDialog extends React.Component {
     const s1 = { color: 'rgba(100,100,100,0.75)', padding: '20px 0 0 0', textTransform: 'uppercase', fontSize: '10px'};
     return (
       <Dialog className="simple-dialog">
+        <button className="btn-close" onClick={this.props.dialog.dismiss}>x</button>
         <div>Simple Dialog with react-dialogista</div>
         <div style={s1}>Press 'ESC' to close</div>
       </Dialog>

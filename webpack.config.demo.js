@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    main: ['./src/demo/scripts/main', 'webpack-hot-middleware/client?reload=true'],
+    main: ['./src/demo/scripts/main'],// 'webpack-hot-middleware/client?reload=true'],
   },
   output: {
     publicPath: '/demo/',
@@ -12,10 +12,15 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[name].js',
   },
+  externals: {
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new webpack.ExternalsPlugin('commonjs', ['react', 'react-dom']),
   ],
   module: {
     loaders: [

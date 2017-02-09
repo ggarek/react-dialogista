@@ -6,16 +6,14 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import App from './components/App';
 import SimpleDialog from './components/SimpleDialog';
-import { DialogHost, createDialogActions, createDialogistaReducer } from '../../lib/scripts';
+import { createDialogActions, createDialogistaReducer } from '../../lib/scripts';
 import { createStore } from 'redux';
 const dialogStore = createStore(createDialogistaReducer());
-const { showDialog } = createDialogActions(dialogStore);
+const { showDialog, showManyDialogs } = createDialogActions(dialogStore);
 
 const openSimpleDialog = () => showDialog(SimpleDialog, {});
+const openManyDialogs = () => showManyDialogs([[SimpleDialog, {}], [SimpleDialog, {}], [SimpleDialog, {}], [SimpleDialog, {}]]);
 ReactDOM.render(
-  <div className="container">
-    <App openDialog={openSimpleDialog} />
-    <DialogHost store={dialogStore} overlayClassName="my-dialog-overlay" className="my-dialog-host"/>
-  </div>,
+  <App openDialog={openSimpleDialog} dialogStore={dialogStore} openMany={openManyDialogs}/>,
   document.querySelector('#dialogista')
 );

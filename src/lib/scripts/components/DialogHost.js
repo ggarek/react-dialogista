@@ -61,9 +61,12 @@ class DialogHost extends React.Component {
       ne.preventDefault();
       ne.stopPropagation();
 
-      // TODO: since only host now knows the display mode, it should get proper dialog id'
-      console.warn('dialogista: TODO: since only host now knows the display mode, it should get proper dialog id');
-      // store.dispatch(dismissDialog());
+      // Since only host now knows the display mode, it should get proper dialog id'
+      // For the stack mode close the last dialog added, for the queue - the first one.
+      const dialogs = store.getState().items;
+      const idToClose = this.props.mode === 'stack'
+        ? dialogs[dialogs.length - 1].id : dialogs[0].id;
+      store.dispatch(dismissDialog(idToClose));
     }
   }
 

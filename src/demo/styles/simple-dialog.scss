@@ -1,3 +1,9 @@
 .simple-dialog {
   border-radius: 5px;
+
+  .btn-close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
 }

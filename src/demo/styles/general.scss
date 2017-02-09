@@ -3,5 +3,19 @@
 }
 
 .my-dialog-host {
+  &._as-notifications {
+    .dialog-host__overlay { display: none }
+    .dialog-host__dialog {
+      display: block;
+    }
 
+    position: absolute;
+    width: auto;
+    height: auto;
+    left: 100px;
+    top: 150px;
+
+    right: unset;
+    bottom: unset;
+  }
 }
