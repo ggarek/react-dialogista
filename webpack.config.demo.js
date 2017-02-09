@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    main: ['./src/demo/scripts/main'],// 'webpack-hot-middleware/client?reload=true'],
+    main: ['./src/demo/scripts/main'], // 'webpack-hot-middleware/client?reload=true'],
   },
   output: {
     publicPath: '/demo/',

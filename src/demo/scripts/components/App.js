@@ -4,6 +4,7 @@ import { DialogHost } from '../../../lib/scripts';
 export default class App extends Component {
   static propTypes = {
     openDialog: PropTypes.func,
+    openMany: PropTypes.func,
     dialogStore: PropTypes.object,
   };
 

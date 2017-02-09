@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Dialog } from '../../../lib/scripts';
 
 /**
  * @class SimpleDialog
  */
 export default class SimpleDialog extends React.Component {
-  static propTypes = {};
+  static propTypes = {
+    dialog: PropTypes.object,
+  };
+
   static defaultProps = {};
 
   render() {
