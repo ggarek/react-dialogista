@@ -1,41 +1,26 @@
 import createDialogistaReducer from './reducer';
 import Dialog from './components/Dialog';
 import DialogHost from './components/DialogHost';
-
-const uid = (() => {
-  let i = 0;
-  return () => ++i;
-})();
+import * as actions from './actions';
 
 function createDialogActions(dialogStore) {
-  /**
-   * Show one dialog
-   * @param {React.Component} component
-   * @param {object} props
-   */
   function showDialog(component, props) {
-    dialogStore.dispatch({
-      type: 'SHOW_DIALOG',
-      id: uid(),
-      component,
-      props,
-    });
+    const action = actions.showDialog(component, props);
+    dialogStore.dispatch(action);
+    return action.id;
   }
 
-  /**
-   * Show any number of dialogs at once
-   * @param {array} dialogs
-   */
   function showManyDialogs(dialogs) {
-    dialogStore.dispatch({
-      type: 'SHOW_MANY_DIALOGS',
-      dialogs: dialogs.map(([component, props]) => ({ id: uid(), component, props })),
-    });
+    const action = actions.showManyDialogs(dialogs);
+    dialogStore.dispatch(action);
+    return action.dialogs.map(x => x.id);
   }
 
   return {
     showDialog,
     showManyDialogs,
+    dismissDialog: id => dialogStore.dispatch(actions.dismissDialog(id)),
+    confirmDialog: id => dialogStore.dispatch(actions.confirmDialog(id)),
   };
 }
 

@@ -92,6 +92,7 @@ class DialogHost extends React.Component {
       confirm() { store.dispatch(confirmDialog(dlg.id)); },
     });
 
+    // TODO Stack and Queue is not very good naming. Much better would be "show last 3 items" or "show first 3 items"
     const toShow = mode === 'stack' ? items.slice(0, show) : items.slice(-1 * show);
     content = toShow.map(dlg => React.createElement(
       dlg.component,
