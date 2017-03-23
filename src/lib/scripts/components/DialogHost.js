@@ -64,6 +64,8 @@ class DialogHost extends React.Component {
       // Since only host now knows the display mode, it should get proper dialog id'
       // For the stack mode close the last dialog added, for the queue - the first one.
       const dialogs = store.getState().items;
+      if (!dialogs.length) return;
+
       const idToClose = this.props.mode === 'stack'
         ? dialogs[dialogs.length - 1].id : dialogs[0].id;
       store.dispatch(dismissDialog(idToClose));
