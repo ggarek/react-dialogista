@@ -7,7 +7,7 @@
     "lint": "eslint src/ *.js",
     "test": "tape -r babel-register ./src/**/__test__/*.test.js",
     "build:lib": "npm run clear:lib && babel src/lib --out-dir lib && mkdir lib/styles && cp -r src/lib/styles lib",
-    "build:demo": "npm run clear:demo && webpack --config webpack.config.demo && cp src/demo/index.html demo/index.html && cp node_modules/react/dist/react.min.js demo && cp node_modules/react-dom/dist/react-dom.min.js demo/",
+    "build:demo": "npm run clear:demo && webpack --config webpack.config.demo && cp src/demo/index.html demo/index.html && cp node_modules/react/umd/react.production.min.js demo/react.min.js && cp node_modules/react-dom/umd/react-dom.production.min.js demo/react-dom.min.js",
     "clear:demo": "rm -rf demo/**",
     "clear:lib": "rm -rf lib/**",
     "preversion": "npm run clear:lib && npm run lint && npm test",
@@ -51,9 +51,10 @@
     "postcss-loader": "^0.8.0",
     "prop-types": "^15.6.0",
     "proxyquire": "^1.7.11",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-redux": "^4.4.2",
+    "react-transition-group": "^1.2.1",
     "redux": "^3.4.0",
     "sass-loader": "^3.1.2",
     "sinon": "^1.17.3",
@@ -65,8 +66,10 @@
   },
   "peerDependencies": {
     "prop-types": "^15.6.0",
-    "react": "^15.0.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-redux": "^4.4.2",
+    "react-transition-group": "^1.2.1",
     "redux": "^3.4.0"
   }
 }
