@@ -3,7 +3,7 @@ import React from 'react';
 import cx from 'classnames';
 import Overlay from './Overlay';
 import DialogsSummary from './DialogsSummary';
-import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
+import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import FirstChild from './FirstChild';
 import { connect } from 'react-redux';
 import wrapWith from './wrapWith';
